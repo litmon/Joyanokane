@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,10 +67,6 @@ public class MainActivity extends ActionBarActivity {
 
         kane.setClickable(false);
 
-        final Calendar nextYear = Calendar.getInstance();
-        nextYear.set(nextYear.get(Calendar.YEAR) + 1, 1, 1);
-        System.out.println(nextYear);
-
         Timer timer = new Timer();
         final Handler h = new Handler();
         timer.schedule(new TimerTask() {
@@ -78,11 +75,28 @@ public class MainActivity extends ActionBarActivity {
                 h.post(new Runnable() {
                     @Override
                     public void run() {
-                        long diff = nextYear.getTimeInMillis() - System.currentTimeMillis();
-
-                        ((TextView) findViewById(R.id.timerTextView)).setText(new SimpleDateFormat("kk:mm:ss:S").format(diff));
+                        ((TextView) findViewById(R.id.timerTextView)).setText(getRestTimeForNextYear(System.currentTimeMillis()));
                     }
                 });
+            }
+
+            public String getRestTimeForNextYear(long from){
+                final Time to = new Time("Asia/Tokyo");
+                to.setToNow();
+                to.set(0, 0, 0, 1, 1, to.year + 1);
+
+                return getRestTime(from, to.toMillis(false));
+            }
+
+            public String getRestTime(long from, long to) {
+                long diff = (to - from) / 1000;
+                long sec = diff % 60;
+                diff /= 60;
+                long min = diff % 60;
+                diff /= 60;
+                long hour = diff % 24;
+
+                return String.format("%02d:%02d:%02d",hour, min, sec);
             }
         }, 0, 10);
     }
