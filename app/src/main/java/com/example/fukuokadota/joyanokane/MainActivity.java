@@ -35,9 +35,9 @@ public class MainActivity extends ActionBarActivity {
         count = limit;
 
         final SoundPool sp;
-        if(Build.VERSION.SDK_INT > 20) {
+        if (Build.VERSION.SDK_INT > 20) {
             sp = new SoundPool.Builder().setMaxStreams(5).setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).build()).build();
-        }else{
+        } else {
             sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         }
         final int id = sp.load(this, R.raw.kane, 0);
@@ -56,7 +56,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 long now = System.currentTimeMillis();
-                if(count > 0 && now > previous + 5000) {
+                if (count > 0 && now > previous + 5000) {
                     sp.play(id, 1.0f, 1.0f, 0, 0, 1.0f);
                     ((TextView) findViewById(R.id.countTextView)).setText(--count + "");
                     previous = now;
